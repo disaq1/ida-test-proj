@@ -11,22 +11,30 @@
       {{ item.cardDescription }}
     </p>
     <span class="card__price">
-      {{ moneyFormat(item.cardPrice)}}
+      {{ moneyFormat(item.cardPrice) }} руб.
     </span>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['item'],
+  props: {
+    item: {
+      type: Object,
+      default () {
+        return {}
+      }
+    }
+  },
+
   methods: {
     deleteCard () {
-      console.log('deleted')
+      this.$emit('deleteCard')
     },
-    moneyFormat (number) {
-      return parseFloat(number).toFixed(2).replace(/(\d)(?=(\d{3})+\.w)/g, '$1 ').replace(/ /g, ' ')
+    moneyFormat (value) {
+      const val = (value / 1).toFixed(0)
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ')
     }
-
   }
 }
 </script>
@@ -71,6 +79,8 @@ export default {
       width: 100%;
       max-height: 200px;
       height: 100%;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
     }
     &__name {
       margin: 16px 0 16px 16px;
