@@ -1,30 +1,74 @@
 <template>
-  <div class="add">
+  <form class="add" @submit.prevent="submit">
     <div class="add__block point">
       <h3>Наименование товара</h3>
-      <input type="text" placeholder="Введите наименование товара">
+      <input
+        id="product_name"
+        v-model="cardName"
+        type="text"
+        placeholder="Введите наименование товара"
+      >
     </div>
     <div class="add__block">
       <h3>Описание товара</h3>
-      <textarea placeholder="Введите описание товара" />
+      <textarea
+        id="product_description"
+        v-model="cardDescription"
+        placeholder="Введите описание товара"
+      />
     </div>
     <div class="add__block point">
       <h3>Ссылка на изображение товара</h3>
-      <input type="text" placeholder="Введите ссылку">
+      <input
+        id="product_link"
+        v-model="cardImage"
+        type="text"
+        placeholder="Введите ссылку"
+      >
     </div>
     <div class="add__block point">
       <h3>Цена товара</h3>
-      <input type="text" placeholder="Введите цену">
+      <input
+        id="product_price"
+        v-model="cardPrice"
+        type="text"
+        placeholder="Введите цену"
+      >
     </div>
-    <button class="add__btn">
+    <button
+      type="submit"
+      class="add__btn"
+    >
       <p>Добавить товар</p>
     </button>
-  </div>
+  </form>
 </template>
 
 <script>
-export default {
+import { mapMutations } from 'vuex'
 
+export default {
+  data () {
+    return {
+      cardImage: '',
+      cardName: '',
+      cardDescription: '',
+      cardPrice: ''
+    }
+  },
+  methods: {
+    ...mapMutations(['ADD_ITEM']),
+    submit () {
+      this.ADD_ITEM({
+        id: Date.now(),
+        cardImage: this.cardImage,
+        cardName: this.cardName,
+        cardDescription: this.cardDescription,
+        cardPrice: this.cardPrice
+      })
+      this.cardImage = this.cardName = this.cardDescription = this.cardPrice = ''
+    }
+  }
 }
 </script>
 
