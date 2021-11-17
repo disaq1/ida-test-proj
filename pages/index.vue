@@ -154,12 +154,13 @@ h1  {
 }
 .main {
   @media screen and (min-width: 768px) {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 348px 1fr;
+    grid-template-areas: ". _cardList";
   }
 }
 .cardList {
+  grid-area: _cardList;
   display: grid;
   align-items: flex-start;
   grid-template-columns: repeat(1, 1fr);
@@ -170,10 +171,10 @@ h1  {
   @media screen and (min-width: 768px) {
     grid-template-columns: repeat(1, 1fr);
   }
-  @media screen and (min-width: 930px) {
+  @media screen and (min-width: 1095px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  @media screen and (min-width: 1204px) {
+  @media screen and (min-width: 1440px) {
     grid-template-columns: repeat(3, 1fr);
   }
 }
@@ -185,6 +186,7 @@ h1  {
 
   @media screen and (min-width: 768px) {
     width: max-content;
+    position: relative;
   }
   & .options-container {
     background: #FFFEFB;
@@ -194,15 +196,28 @@ h1  {
     max-height: 0;
     width: 100%;
     opacity: 0;
-    transition: all 0.3s;
+    @include smooth;
     overflow: hidden;
 
     order: 1;
+    @media screen and (min-width: 768px) {
+      max-height: none;
+      position: absolute;
+      top: -300%;
+      left: 0;
+      z-index: 10;
+    }
   }
   & .options-container.active {
     max-height: 240px;
     opacity: 1;
-    margin: 10px 0 0;
+    margin: 5px 0 0;
+    @include smooth;
+    @media screen and (min-width: 768px) {
+      margin: 0;
+      top: 40px;
+      left: 0;
+    }
   }
   & .options-container.active + .selected::after {
     transform: rotateX(180deg);
