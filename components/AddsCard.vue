@@ -1,13 +1,18 @@
 <template>
-  <form class="add" @submit.prevent="submit">
-    <div class="add__block point">
+  <form class="add">
+    <div class="add__block point" :class="{ 'border--red': nameError}">
       <h3>Наименование товара</h3>
       <input
         id="product_name"
-        v-model="cardName"
+        :value="cardName"
         type="text"
         placeholder="Введите наименование товара"
+        @input="handleName($event)"
+        @focus="handleName($event)"
       >
+      <span v-if="nameError" class="error">
+        {{ nameError }}
+      </span>
     </div>
     <div class="add__block">
       <h3>Описание товара</h3>
@@ -17,27 +22,39 @@
         placeholder="Введите описание товара"
       />
     </div>
-    <div class="add__block point">
+    <div class="add__block point" :class="{ 'border--red': imageError}">
       <h3>Ссылка на изображение товара</h3>
       <input
         id="product_link"
-        v-model="cardImage"
+        :value="cardImage"
         type="text"
         placeholder="Введите ссылку"
+        @input="handleImage($event)"
+        @focus="handleImage($event)"
       >
+      <span v-if="imageError" class="error">
+        {{ imageError }}
+      </span>
     </div>
-    <div class="add__block point">
+    <div class="add__block point" :class="{ 'border--red': priceError}">
       <h3>Цена товара</h3>
       <input
         id="product_price"
-        v-model="cardPrice"
-        type="text"
+        :value="cardPrice"
+        type="number"
         placeholder="Введите цену"
+        @input="handlePrice($event)"
+        @focus="handlePrice($event)"
       >
+      <span v-if="priceError" class="error">
+        {{ priceError }}
+      </span>
     </div>
     <button
       type="submit"
       class="add__btn"
+      :disabled="isSubmitDisabled"
+      @click.prevent="undisable()"
     >
       <p>Добавить товар</p>
     </button>
@@ -53,7 +70,16 @@ export default {
       cardImage: '',
       cardName: '',
       cardDescription: '',
-      cardPrice: ''
+      cardPrice: '',
+
+      nameError: '',
+      imageError: '',
+      priceError: ''
+    }
+  },
+  computed: {
+    isSubmitDisabled () {
+      return Boolean(this.nameError || this.imageError || this.priceError)
     }
   },
   methods: {
@@ -67,6 +93,29 @@ export default {
         cardPrice: this.cardPrice
       })
       this.cardImage = this.cardName = this.cardDescription = this.cardPrice = ''
+    },
+    undisable () {
+      const productName = document.getElementById('product_name')
+      const productLink = document.getElementById('product_link')
+      const productPrice = document.getElementById('product_price')
+      if (productName.value !== '' && productLink.value !== '' && productPrice.value !== '') {
+        this.submit()
+      }
+    },
+    // name validation
+    handleName (e) {
+      this.cardName = e.target.value
+      this.nameError = !this.cardName.length ? 'Поле является обязательным' : ''
+    },
+    // image validation
+    handleImage (e) {
+      this.cardImage = e.target.value
+      this.imageError = !this.cardImage.length ? 'Поле является обязательным' : ''
+    },
+    // price validation
+    handlePrice (e) {
+      this.cardPrice = e.target.value
+      this.priceError = !this.cardPrice.length ? 'Поле является обязательным' : ''
     }
   }
 }
@@ -77,6 +126,11 @@ export default {
   @mixin smooth {
     transition: 0.3s;
   }
+  .border--red input {
+    outline: none;
+    border: 1px solid #FF8484 !important;
+    box-sizing: border-box;
+  }
   .add {
     width: 100%;
     margin: 0 0 20px;
@@ -85,7 +139,25 @@ export default {
     background: #FFFEFB;
     box-shadow: 0 20px 30px rgba(0, 0, 0, 0.04), 0 6px 10px rgba(0, 0, 0, 0.02);
     border-radius: 4px;
+    box-sizing: border-box;
 
+    & .point {
+      position: relative;
+      & .error {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        margin: 0;
+        padding: 0;
+        font-size: 8px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 10px;
+        letter-spacing: -0.02em;
+        text-align: left;
+        color: #FF8484;
+      }
+    }
     &__block {
       margin: 0 0 16px;
       & h3 {
@@ -103,8 +175,9 @@ export default {
         width: 100%;
         padding: 10px 16px 11px;
         background: #FFFEFB;
-        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-        border: none;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        border: 1px solid transparent;
+        outline: none;
         border-radius: 4px;
         &::placeholder {
           font-size: 12px;
@@ -169,9 +242,14 @@ export default {
       }
     }
     @media screen and (min-width: 768px) {
-      margin: 0 16px 0 0;
+      margin: 0;
       min-width: 332px;
       width: 332px;
+      height: 453px;
+      position: -webkit-sticky;
+      position: sticky;
+      top: 24px;
+      left: 32px;
     }
   }
 </style>
