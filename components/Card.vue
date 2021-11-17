@@ -41,8 +41,9 @@ export default {
 
 <style lang="scss">
   .card {
-    width: 100%;
-    height: 100%;
+    width: 332px;
+    height: 423px;
+    box-sizing: border-box;
     max-width: 550px;
     margin: 0 auto;
     display: flex;
@@ -117,9 +118,6 @@ export default {
       line-height: 30px;
       letter-spacing: 0;
       text-align: left;
-    }
-    @media screen and (min-width: 1204px) {
-      max-width: 332px;
     }
   }
 </style>
